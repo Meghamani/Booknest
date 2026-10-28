@@ -1,26 +1,80 @@
 @import "tailwindcss";
 
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  color-scheme: light;
+  --background: #F7F4EB;
+  --foreground: #283B37;
+  --page-bg: #F7F4EB;
+  --sidebar-bg: #244A46;
+  --card-bg: #FFFFFF;
+  --text-primary: #283B37;
+  --text-secondary: #68736D;
+  --accent: #E6F0E9;
+  --accent-hover: #548C83;
+  --secondary-accent: #E8B653;
+  --secondary-hover: #F0C975;
+  --coral: #E9785B;
+  --border: #E7E6DE;
+  --paper: #F2E7D6;
+}
+
+:root[data-theme="dark"] {
+  color-scheme: dark;
+  --background: #14201D;
+  --foreground: #EDF2EC;
+  --page-bg: #192824;
+  --sidebar-bg: #101A18;
+  --card-bg: #22332F;
+  --text-primary: #EDF2EC;
+  --text-secondary: #B5C3BA;
+  --accent: #2A413A;
+  --accent-hover: #83B7A6;
+  --secondary-accent: #E8B653;
+  --secondary-hover: #F0C975;
+  --coral: #F18B72;
+  --border: #354941;
+  --paper: #433A2B;
 }
 
 @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
+  --color-page: var(--page-bg);
+  --color-sidebar: var(--sidebar-bg);
+  --color-card: var(--card-bg);
+  --color-textPrimary: var(--text-primary);
+  --color-textSecondary: var(--text-secondary);
+  --color-accent: var(--accent);
+  --color-accentHover: var(--accent-hover);
+  --color-secondaryAccent: var(--secondary-accent);
+  --color-secondaryHover: var(--secondary-hover);
+  --color-coral: var(--coral);
+  --color-border: var(--border);
+  --color-paper: var(--paper);
   --font-sans: var(--font-geist-sans);
   --font-mono: var(--font-geist-mono);
-}
-
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
 }
 
 body {
   background: var(--background);
   color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  font-family: var(--font-geist-sans), sans-serif;
+  transition: background-color 180ms ease, color 180ms ease;
+}
+
+:root[data-theme="dark"] .bg-white {
+  background-color: var(--card-bg) !important;
+}
+
+:root[data-theme="dark"] input:not([type="checkbox"]):not([type="radio"]),
+:root[data-theme="dark"] textarea,
+:root[data-theme="dark"] select {
+  background-color: var(--card-bg);
+  color: var(--text-primary);
+  border-color: var(--border);
+}
+
+:root[data-theme="dark"] input::placeholder,
+:root[data-theme="dark"] textarea::placeholder {
+  color: var(--text-secondary);
 }

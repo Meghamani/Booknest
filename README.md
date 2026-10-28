@@ -16,6 +16,18 @@ bun dev
 
 Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
 
+### AI book recommendations
+
+Home can generate book suggestions from the signed-in reader's favorite genres. Add a Gemini API key to the server environment to enable this feature:
+
+```env
+GEMINI_API_KEY=your-server-side-key
+# Optional; defaults to gemini-2.0-flash
+GEMINI_MODEL=gemini-2.0-flash
+```
+
+Do not prefix these variables with `NEXT_PUBLIC_`; the API key must remain server-side. Without a key, the rest of the app works and Home displays a setup message in the recommendations section.
+
 You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
 
 This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.

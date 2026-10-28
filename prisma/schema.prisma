@@ -1,0 +1,58 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+
+
+/* ANALYTICS TABLE */
+model Analytics {
+  id        String   @id @default(uuid())
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId    String
+  event     String
+  metadata  Json?
+  createdAt DateTime @default(now())
+
+  @@map("Analytics") // Explicitly map to "Analytics" table
+}
+
+model User {
+  id        String   @id @default(uuid())
+  name      String
+  email     String   @unique
+  password  String
+  avatarUrl String?
+  favoriteGenres String @default("[]")
+  readingGoal Int @default(12)
+  createdAt DateTime @default(now())
+
+  analytics Analytics[]
+  books     Book[]   // 👈 user has many books
+
+  @@map("User")
+}
+
+model Book {
+  id        String   @id @default(cuid())
+  title     String
+  author    String
+  genre     String
+  status    String
+  rating    Int
+  imageUrl  String
+  review    String?
+  notes     String?
+  finishedAt DateTime?
+
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId    String   // 👈 owner of the book
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@map("Book")
+}
