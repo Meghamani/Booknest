@@ -309,6 +309,7 @@ export default function DashboardPage() {
         </div>
       </section>
 
+      {!recommendationError && (!favoriteGenres.length || !hasLoadedRecommendations || recommendations.length > 0) && (
       <section aria-labelledby="recommendations-heading" className="border-t border-border pt-7">
         <div className="mb-5 flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
           <div>
@@ -382,6 +383,7 @@ export default function DashboardPage() {
           </div>
         )}
       </section>
+      )}
 
       <section aria-labelledby="recent-heading" className="border-t border-border pt-7">
         <div className="mb-5 flex flex-wrap items-end justify-between gap-3">
