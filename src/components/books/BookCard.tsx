@@ -34,6 +34,7 @@ export default function BookCard({
         src={cover && cover.trim() !== "" ? cover : "/default-img.png"}
           alt={title}
           fill
+          unoptimized={cover.startsWith("/api/images/")}
           className="object-cover group-hover:scale-105 transition-transform duration-300"
         />
 

@@ -171,8 +171,8 @@ export default function DashboardOnboarding() {
             <span className="mb-5 inline-flex h-12 w-12 items-center justify-center rounded-full bg-[#E6F0E9] text-[#244A46]">
               <BookHeart size={23} aria-hidden="true" />
             </span>
-            <p className="text-xs font-semibold uppercase tracking-[0.14em] text-accentHover">Welcome to Book Hub</p>
-            <h2 id="welcome-title" className="mt-2 font-serif text-3xl text-textPrimary">Make Book Hub yours</h2>
+            <p className="text-xs font-semibold uppercase tracking-[0.14em] text-accentHover">Welcome to Booknest</p>
+            <h2 id="welcome-title" className="mt-2 font-serif text-3xl text-textPrimary">Make Booknest yours</h2>
             <p className="mt-3 text-sm leading-6 text-textSecondary">
               Pick favorite genres and set a reading goal to make your reading room feel like your own.
             </p>

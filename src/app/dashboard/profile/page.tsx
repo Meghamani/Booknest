@@ -2,7 +2,8 @@
 
 import { ChangeEvent, useEffect, useRef, useState } from "react";
 import Cropper, { Area } from "react-easy-crop";
-import { Camera, CirclePlus, LoaderCircle, Plus, Search, Save, Trash2, X } from "lucide-react";
+import Link from "next/link";
+import { ArrowLeft, Camera, CirclePlus, LoaderCircle, Plus, Search, Save, Trash2, X } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { toast } from "sonner";
 import Avatar from "@/components/ui/Avatar";
@@ -214,6 +215,15 @@ export default function ProfilePage() {
 
   return (
     <div className="mx-auto w-full max-w-5xl space-y-6 pb-10">
+      <Link
+        href="/dashboard"
+        aria-label="Back to dashboard"
+        title="Back to dashboard"
+        className="inline-flex min-h-10 items-center gap-2 rounded-lg border border-border bg-white px-3 text-sm font-semibold text-textPrimary shadow-sm transition hover:bg-accent focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accentHover"
+      >
+        <ArrowLeft size={19} aria-hidden="true" />
+        <span>Back to Dashboard</span>
+      </Link>
       <ReadingPageHeader
         eyebrow="The person behind the pages"
         title="Your reading room, your name."

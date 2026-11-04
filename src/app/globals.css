@@ -2,20 +2,25 @@
 
 :root {
   color-scheme: light;
-  --background: #F7F4EB;
-  --foreground: #283B37;
-  --page-bg: #F7F4EB;
-  --sidebar-bg: #244A46;
-  --card-bg: #FFFFFF;
-  --text-primary: #283B37;
-  --text-secondary: #68736D;
-  --accent: #E6F0E9;
-  --accent-hover: #548C83;
-  --secondary-accent: #E8B653;
-  --secondary-hover: #F0C975;
-  --coral: #E9785B;
-  --border: #E7E6DE;
-  --paper: #F2E7D6;
+  --background: #FBF7ED;
+  --foreground: #173F3A;
+  --page-bg: #FBF7ED;
+  --sidebar-bg: #245B52;
+  --card-bg: #FFFEFA;
+  --text-primary: #173F3A;
+  --text-secondary: #526963;
+  --accent: #E8EEE4;
+  --accent-hover: #3F796F;
+  --secondary-accent: #D8A33E;
+  --secondary-hover: #E8BE6B;
+  --coral: #B64E3C;
+  --border: #C9D6CC;
+  --paper: #F3EBDD;
+  --font-reading-room: Georgia, Cambria, "Times New Roman", serif;
+  --form-background: #FBF7ED;
+  --form-foreground: #173F3A;
+  --form-border: #C9D6CC;
+  --form-focus: #245B52;
 }
 
 :root[data-theme="dark"] {
@@ -34,6 +39,10 @@
   --coral: #F18B72;
   --border: #354941;
   --paper: #433A2B;
+  --form-background: #22332F;
+  --form-foreground: #EDF2EC;
+  --form-border: #52675D;
+  --form-focus: #83B7A6;
 }
 
 @theme inline {
@@ -51,30 +60,110 @@
   --color-coral: var(--coral);
   --color-border: var(--border);
   --color-paper: var(--paper);
-  --font-sans: var(--font-geist-sans);
+  --font-sans: var(--font-reading-room);
+  --font-serif: var(--font-reading-room);
   --font-mono: var(--font-geist-mono);
 }
 
 body {
   background: var(--background);
   color: var(--foreground);
-  font-family: var(--font-geist-sans), sans-serif;
+  font-family: var(--font-reading-room);
   transition: background-color 180ms ease, color 180ms ease;
 }
 
-:root[data-theme="dark"] .bg-white {
-  background-color: var(--card-bg) !important;
-}
-
-:root[data-theme="dark"] input:not([type="checkbox"]):not([type="radio"]),
-:root[data-theme="dark"] textarea,
-:root[data-theme="dark"] select {
+.bg-white {
   background-color: var(--card-bg);
-  color: var(--text-primary);
-  border-color: var(--border);
 }
 
-:root[data-theme="dark"] input::placeholder,
-:root[data-theme="dark"] textarea::placeholder {
+input:not([type="checkbox"]):not([type="radio"]):not([type="file"]):not([type="range"]):not([type="hidden"]),
+textarea,
+select {
+  height: 58px;
+  border: 1px solid var(--form-border);
+  border-radius: 20px;
+  background-color: var(--form-background);
+  color: var(--form-foreground);
+  font-family: var(--font-reading-room);
+  font-size: 1rem;
+  transition: border-color 160ms ease, box-shadow 160ms ease, background-color 160ms ease;
+}
+
+textarea {
+  height: auto;
+  min-height: 120px;
+}
+
+input::placeholder,
+textarea::placeholder {
   color: var(--text-secondary);
+  opacity: 0.8;
+}
+
+input:focus-visible,
+textarea:focus-visible,
+select:focus-visible {
+  border-color: var(--form-focus);
+  outline: none;
+  box-shadow: 0 0 0 4px color-mix(in srgb, var(--form-focus) 14%, transparent);
+}
+
+form button[type="submit"] {
+  height: 58px;
+  border-radius: 22px;
+  background-color: var(--form-focus);
+  color: #fff;
+  font-family: var(--font-reading-room);
+  font-size: 1.125rem;
+  font-weight: 700;
+  box-shadow: 0 8px 18px rgb(36 91 82 / 14%);
+  transition: background-color 160ms ease, box-shadow 160ms ease, transform 160ms ease;
+}
+
+form button[type="submit"]:hover:not(:disabled) {
+  background-color: #1D4D46;
+  box-shadow: 0 10px 22px rgb(36 91 82 / 18%);
+}
+
+form button[type="submit"]:focus-visible {
+  outline: 3px solid color-mix(in srgb, var(--form-focus) 42%, white);
+  outline-offset: 3px;
+}
+
+.book-list-controls input,
+.book-list-controls select {
+  height: 40px;
+  min-height: 40px;
+  border: 1px solid color-mix(in srgb, var(--form-border) 72%, transparent);
+  border-radius: 8px;
+  background-color: color-mix(in srgb, var(--card-bg) 78%, transparent);
+  padding-top: 0.5rem;
+  padding-bottom: 0.5rem;
+  font-size: 0.875rem;
+}
+
+.book-list-controls input {
+  padding-left: 2.5rem;
+  padding-right: 0.75rem;
+}
+
+.book-list-controls select {
+  padding-left: 0.75rem;
+  padding-right: 0.75rem;
+}
+
+@media (min-width: 640px) {
+  input:not([type="checkbox"]):not([type="radio"]):not([type="file"]):not([type="range"]):not([type="hidden"]),
+  select,
+  form button[type="submit"] {
+    height: 66px;
+  }
+}
+
+@media (min-width: 1024px) {
+  input:not([type="checkbox"]):not([type="radio"]):not([type="file"]):not([type="range"]):not([type="hidden"]),
+  select,
+  form button[type="submit"] {
+    height: 64px;
+  }
 }

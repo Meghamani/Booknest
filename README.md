@@ -16,6 +16,18 @@ bun dev
 
 Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
 
+### Password reset emails
+
+Configure Resend and the public app URL in the server environment to enable password reset emails:
+
+```env
+RESEND_API_KEY=your-resend-api-key
+RESEND_FROM_EMAIL=onboarding@resend.dev
+APP_URL=http://localhost:3000
+```
+
+Use a sender address verified with Resend in production. Reset links expire after 30 minutes and are single-use.
+
 ### AI book recommendations
 
 Home can generate book suggestions from the signed-in reader's favorite genres. Add a Gemini API key to the server environment to enable this feature:

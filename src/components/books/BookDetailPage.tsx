@@ -137,6 +137,7 @@ export default function BookDetailPage() {
                 src={book.imageUrl || "/default-img.png"}
                 alt={`Cover of ${book.title}`}
                 fill
+                unoptimized={book.imageUrl.startsWith("/api/images/")}
                 sizes="(max-width: 768px) 80vw, 30vw"
                 className="object-cover"
               />

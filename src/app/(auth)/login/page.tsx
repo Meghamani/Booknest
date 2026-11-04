@@ -1,11 +1,13 @@
+
 "use client";
 
 import { useState } from "react";
 import { useForm, SubmitHandler } from "react-hook-form";
-import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
+import { ArrowRight, Eye, EyeOff, LockKeyhole, Mail } from "lucide-react";
 import { toast } from "sonner";
+import AuthFormShell from "@/components/auth/AuthFormShell";
 
 type FormValues = {
   email: string;
@@ -14,29 +16,40 @@ type FormValues = {
 
 export default function LoginPage() {
   const router = useRouter();
+
+  const [serverError, setServerError] = useState("");
+  const [showPassword, setShowPassword] = useState(false);
+
   const {
     register,
     handleSubmit,
-    formState: { errors },
+    formState: { errors, isSubmitting },
     reset,
-  } = useForm<FormValues>({ mode: "onBlur" });
-
-  const [serverError, setServerError] = useState("");
+  } = useForm<FormValues>({
+    mode: "onBlur",
+  });
 
   const onSubmit: SubmitHandler<FormValues> = async (data) => {
     setServerError("");
+
     try {
       const res = await fetch("/api/auth", {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ action: "login", ...data }),
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          action: "login",
+          ...data,
+        }),
       });
 
       const result = await res.json();
+
       if (res.ok) {
-        reset(); // clear the form
+        reset();
         toast.success("Welcome back!");
-        router.push("/dashboard"); // redirect after successful login
+        router.push("/dashboard");
       } else {
         setServerError(result.error || "Invalid credentials");
       }
@@ -46,66 +59,78 @@ export default function LoginPage() {
   };
 
   return (
-    <div className="max-w-md w-full mx-auto">
-      {/* Logo */}
-      <div className="flex items-center gap-2 mb-10 justify-center">
-        <Image src="/book-hub-logo.png" alt="Book Hub Logo" width={55} height={55} />
-        <h1 className="text-4xl font-bold text-textPrimary">
-          Book<span className="text-accentHover">Hub</span>
-        </h1>
-      </div>
+    <AuthFormShell title="Welcome back to your reading room." subtitle="Pick up where your next chapter begins.">
+        <form onSubmit={handleSubmit(onSubmit)} className="space-y-3 lg:space-y-3" autoComplete="on">
+          <div>
+            <label htmlFor="email" className="sr-only">Email address</label>
+            <div className="relative">
+              <Mail aria-hidden="true" size={23} strokeWidth={1.7} className="pointer-events-none absolute left-5 top-1/2 -translate-y-1/2 text-[#245B52]" />
+              <input
+                id="email"
+                type="email"
+                placeholder="Email ID"
+                autoComplete="new-email"
+                {...register("email", {
+                  required: "Email is required",
+                  pattern: {
+                    value: /^\S+@\S+\.\S+$/,
+                    message: "Please enter a valid email",
+                  },
+                })}
+                className="h-[58px] w-full min-w-0 rounded-[20px] border border-[#C9D6CC] bg-[#FBF7ED] py-3 pl-[58px] pr-4 font-serif text-base text-[#173F3A] placeholder:text-[#698077] outline-none transition focus:border-[#245B52] focus:ring-4 focus:ring-[#245B52]/10 sm:h-[66px] sm:text-lg lg:h-[64px] lg:rounded-[24px] lg:py-4 lg:text-lg"
+              />
+            </div>
+            {errors.email && <p className="mt-2 px-2 text-sm text-[#B64E3C]">{errors.email.message}</p>}
+          </div>
 
-      <h2 className="mb-8 text-center text-3xl font-semibold text-textPrimary">Login</h2>
+          <div>
+            <label htmlFor="password" className="sr-only">Password</label>
+            <div className="relative">
+              <LockKeyhole aria-hidden="true" size={23} strokeWidth={1.7} className="pointer-events-none absolute left-5 top-1/2 -translate-y-1/2 text-[#245B52]" />
+              <input
+                id="password"
+                type={showPassword ? "text" : "password"}
+                placeholder="Password"
+                autoComplete="new-password"
+                {...register("password", { required: "Password is required" })}
+                className="h-[58px] w-full min-w-0 rounded-[20px] border border-[#C9D6CC] bg-[#FBF7ED] py-3 pl-[58px] pr-16 font-serif text-base text-[#173F3A] placeholder:text-[#698077] outline-none transition focus:border-[#245B52] focus:ring-4 focus:ring-[#245B52]/10 sm:h-[66px] sm:text-lg lg:h-[64px] lg:rounded-[24px] lg:py-4 lg:text-lg"
+              />
+              <button
+                type="button"
+                onClick={() => setShowPassword((prev) => !prev)}
+                aria-label={showPassword ? "Hide password" : "Show password"}
+                className="absolute inset-y-0 right-3 inline-flex w-12 items-center justify-center rounded-full text-[#245B52] transition hover:bg-[#E8EEE4] active:scale-95"
+              >
+                {showPassword ? <EyeOff size={21} /> : <Eye size={21} />}
+              </button>
+            </div>
+            {errors.password && <p className="mt-2 px-2 text-sm text-[#B64E3C]">{errors.password.message}</p>}
+          </div>
 
-      <form className="space-y-6" onSubmit={handleSubmit(onSubmit)} autoComplete="off">
-        {/* Hidden fields to prevent autofill */}
-        <input type="text" name="fakeusername" autoComplete="username" style={{ display: 'none' }} />
-        <input type="password" name="fakepassword" autoComplete="new-password" style={{ display: 'none' }} />
+          <div className="flex justify-end px-1 pt-0.5">
+            <Link href="/forgot-password" className="text-sm font-semibold text-[#245B52] transition hover:underline sm:text-base">
+              Forgot password?
+            </Link>
+          </div>
 
-        {/* Email */}
-        <div className="flex flex-col">
-          <input
-            type="email"
-            placeholder="Email ID"
-            {...register("email", {
-              required: "Email is required",
-              pattern: { value: /\S+@\S+\.\S+/, message: "Invalid email" },
-            })}
-            autoComplete="new-email"
-            className="w-full rounded-xl border border-border bg-white px-4 py-3 text-textPrimary outline-none focus:ring-2 focus:ring-accentHover"
-          />
-          {errors.email && <p className="mt-1 text-sm text-coral">{errors.email.message}</p>}
-        </div>
+          {serverError && <div role="alert" className="rounded-2xl bg-[#FCE9E2] px-4 py-3 text-sm text-[#B64E3C]">{serverError}</div>}
 
-        {/* Password */}
-        <div className="flex flex-col">
-          <input
-            type="password"
-            placeholder="Password"
-            {...register("password", { required: "Password is required" })}
-            autoComplete="new-password"
-            className="w-full rounded-xl border border-border bg-white px-4 py-3 text-textPrimary outline-none focus:ring-2 focus:ring-accentHover"
-          />
-          {errors.password && <p className="mt-1 text-sm text-coral">{errors.password.message}</p>}
-        </div>
+          <button
+            type="submit"
+            disabled={isSubmitting}
+            className="inline-flex h-[58px] w-full items-center justify-center gap-3 rounded-[22px] bg-[#245B52] font-serif text-lg font-bold text-white shadow-[0_8px_18px_rgba(36,91,82,0.14)] transition duration-200 hover:bg-[#1D4D46] active:scale-[0.99] disabled:cursor-not-allowed disabled:opacity-60 sm:h-[66px] sm:text-xl lg:h-[64px] lg:rounded-[28px] lg:text-xl"
+          >
+            {isSubmitting ? "Logging in..." : "Log in"}
+            {!isSubmitting && <ArrowRight aria-hidden="true" size={22} strokeWidth={1.8} />}
+          </button>
+        </form>
 
-        {serverError && <p className="text-sm text-coral">{serverError}</p>}
-
-        <button
-          type="submit"
-          className="w-full rounded-xl bg-sidebar py-3 font-semibold text-white transition hover:bg-accentHover"
-        >
-          LOGIN
-        </button>
-      </form>
-
-      {/* Create Account Link */}
-      <p className="mt-6 text-center text-textSecondary">
-        Don’t have an account?{" "}
-        <Link href="/register" className="font-semibold text-accentHover">
-          Create one
-        </Link>
-      </p>
-    </div>
+        <p className="mt-3 text-center text-sm leading-relaxed text-[#383D38] sm:text-base lg:mt-4">
+          Don’t have an account?{" "}
+          <Link href="/register" className="font-bold text-[#173F3A] underline-offset-4 hover:underline">
+            Create account
+          </Link>
+        </p>
+    </AuthFormShell>
   );
 }

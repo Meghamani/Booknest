@@ -2,8 +2,11 @@
 
 import { useState, useRef, useEffect, useSyncExternalStore } from "react";
 import Link from "next/link";
-import { Menu, Moon, Sun } from "lucide-react";
+import { useRouter } from "next/navigation";
+import { LogOut, Menu, Moon, Sun } from "lucide-react";
+import { toast } from "sonner";
 import Avatar from "../ui/Avatar";
+import ConfirmationDialog from "../ui/ConfirmationDialog";
 
 function subscribeToTheme(onChange: () => void) {
   window.addEventListener("book-hub-theme-change", onChange);
@@ -19,7 +22,9 @@ function getServerThemeSnapshot(): "light" | "dark" {
 }
 
 export default function TopNavBar({ onMenuClick }: { onMenuClick?: () => void }) {
+  const router = useRouter();
   const [open, setOpen] = useState(false);
+  const [logoutConfirmationOpen, setLogoutConfirmationOpen] = useState(false);
   const themeMode = useSyncExternalStore(subscribeToTheme, getThemeSnapshot, getServerThemeSnapshot);
   const [profile, setProfile] = useState<{ name: string; email: string; avatarUrl: string | null }>({
     name: "Reader",
@@ -42,6 +47,23 @@ export default function TopNavBar({ onMenuClick }: { onMenuClick?: () => void })
     localStorage.setItem("book-hub-theme", nextTheme);
     window.dispatchEvent(new Event("book-hub-theme-change"));
   };
+
+  async function handleLogout() {
+    setLogoutConfirmationOpen(false);
+    try {
+      const response = await fetch("/api/auth", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ action: "logout" }),
+      });
+      if (!response.ok) throw new Error("Logout failed");
+      toast.success("You have been logged out");
+      router.replace("/login");
+    } catch (error) {
+      console.error(error);
+      toast.error("Could not log out. Please try again.");
+    }
+  }
 
   useEffect(() => {
     let cancelled = false;
@@ -96,7 +118,7 @@ export default function TopNavBar({ onMenuClick }: { onMenuClick?: () => void })
         >
           <Menu size={21} aria-hidden="true" />
         </button>
-        <span className="font-semibold text-textPrimary md:hidden">Book Hub</span>
+        <span className="font-semibold text-textPrimary md:hidden">Booknest</span>
       </div>
 
       <div className="relative flex items-center" ref={dropdownRef}>
@@ -138,9 +160,28 @@ export default function TopNavBar({ onMenuClick }: { onMenuClick?: () => void })
             >
               View Profile
             </Link>
-
+            <button
+              type="button"
+              onClick={() => {
+                setOpen(false);
+                setLogoutConfirmationOpen(true);
+              }}
+              className="flex w-full items-center gap-2 border-t border-border px-4 py-2 text-left text-sm font-medium text-coral transition hover:bg-accent"
+            >
+              <LogOut size={15} aria-hidden="true" />
+              Log out
+            </button>
           </div>
         )}
+        <ConfirmationDialog
+          open={logoutConfirmationOpen}
+          title="Are you sure you want to log out?"
+          message="You will need to log in again to access your reading room."
+          confirmButtonText="Log out"
+          cancelButtonText="Stay logged in"
+          onConfirm={() => void handleLogout()}
+          onCancel={() => setLogoutConfirmationOpen(false)}
+        />
       </div>
     </header>
   );

@@ -426,6 +426,7 @@ export default function DashboardPage() {
                       src={book.imageUrl?.trim() || "/default-img.png"}
                       alt={`Cover of ${book.title}`}
                       fill
+                      unoptimized={book.imageUrl?.startsWith("/api/images/")}
                       sizes="(max-width: 640px) 45vw, (max-width: 1024px) 28vw, 20vw"
                       className="object-cover transition duration-300 group-hover:scale-[1.03]"
                     />

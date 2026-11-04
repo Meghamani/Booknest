@@ -55,7 +55,7 @@ export default function BookListControls({
     || filters.sort !== "default";
 
   return (
-    <section aria-label="Search, filter, and sort books" className="mb-5 flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-end">
+    <section aria-label="Search, filter, and sort books" className="book-list-controls mb-5 flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-end">
       <label className="relative min-w-0 sm:mr-auto sm:w-64">
         <span className="sr-only">Search title or author</span>
         <Search size={17} className="pointer-events-none absolute left-3 top-1/2 -translate-y-1/2 text-textSecondary" aria-hidden="true" />

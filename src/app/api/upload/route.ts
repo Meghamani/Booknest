@@ -1,8 +1,8 @@
 import { NextResponse } from "next/server";
-import path from "path";
-import fs from "fs/promises";
 import { randomUUID } from "crypto";
+import { PutObjectCommand } from "@aws-sdk/client-s3";
 import { getAuthenticatedUserId } from "@/lib/auth";
+import { s3, S3_BUCKET } from "@/lib/s3-client";
 
 const imageExtensions: Record<string, string> = {
   "image/jpeg": ".jpg",
@@ -36,20 +36,17 @@ export async function POST(req: Request) {
     }
 
     const bytes = await file.arrayBuffer();
-    const buffer = Buffer.from(bytes);
-
-    // ensure uploads folder exists
-    const uploadDir = path.join(process.cwd(), "public/uploads");
-    await fs.mkdir(uploadDir, { recursive: true });
-
     const filename = `${randomUUID()}${extension}`;
-    const filepath = path.join(uploadDir, filename);
+    await s3.send(new PutObjectCommand({
+      Bucket: S3_BUCKET,
+      Key: `uploads/${filename}`,
+      Body: Buffer.from(bytes),
+      ContentType: file.type,
+      ContentLength: file.size,
+    }));
 
-    await fs.writeFile(filepath, buffer);
-
-    // 👇 THIS is what your ImageUploader expects
     return NextResponse.json({
-      url: `/uploads/${filename}`,
+      url: `/api/images/${filename}`,
     });
   } catch (err) {
     console.error("Upload error:", err);

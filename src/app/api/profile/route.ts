@@ -44,7 +44,7 @@ export async function PATCH(req: Request) {
     const name = typeof body.name === "string" ? body.name.trim() : "";
     const avatarUrl = body.avatarUrl === "" || body.avatarUrl === null
       ? null
-      : typeof body.avatarUrl === "string" && body.avatarUrl.startsWith("/uploads/")
+      : typeof body.avatarUrl === "string" && /^\/(?:api\/images|uploads)\/[0-9a-f-]{36}\.(?:jpg|png|webp|gif)$/.test(body.avatarUrl)
         ? body.avatarUrl
         : undefined;
 

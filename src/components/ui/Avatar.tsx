@@ -33,6 +33,7 @@ export default function Avatar({
           alt={name}
           width={size}
           height={size}
+          unoptimized={imageUrl.startsWith("/api/images/")}
           className="object-cover"
           onError={() => setFailedImageUrl(imageUrl)}
         />
